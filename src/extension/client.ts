@@ -54,7 +54,7 @@ export class Web3AuthClient implements WalletClient {
       throw new Error('Web3Auth client not initialized');
     }
 
-    this.loginHint = localStorage.getItem('@fuzio/loginHint') ?? undefined;
+    this.loginHint = localStorage.getItem('@velo/loginHint') ?? undefined;
 
     if (
       (this.#options.loginProvider === 'email_passwordless' &&
