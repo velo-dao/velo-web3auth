@@ -186,7 +186,7 @@ export const connectClientAndProvider = async (
         mode: 'dark',
         defaultLanguage: filteredLocales[0],
         theme: {
-          primary: '#262626',
+          primary: '#161616',
           onPrimary: '#f0f0f0',
         },
       },
