@@ -1,7 +1,7 @@
 import { Chain } from '@chain-registry/types';
 import { OfflineAminoSigner, StdSignature } from '@cosmjs/amino';
 import { OfflineDirectSigner } from '@cosmjs/proto-signing';
-import { DappEnv, WalletClient } from '@cosmos-kit/core';
+import { DappEnv, SignOptions, WalletClient } from '@cosmos-kit/core';
 import { makeADR36AminoSignDoc } from '@keplr-wallet/cosmos';
 import { encrypt, generatePrivate, getPublic } from '@toruslabs/eccrypto';
 import { UserInfo } from '@web3auth/base';
@@ -23,6 +23,20 @@ export class Web3AuthClient implements WalletClient {
   env: DappEnv;
   getChain: (chainId: string) => Chain | undefined;
   loginHint: string | undefined;
+
+  private _defaultSignOptions: SignOptions = {
+    preferNoSetFee: false,
+    preferNoSetMemo: true,
+    disableBalanceCheck: true,
+  };
+
+  get defaultSignOptions() {
+    return this._defaultSignOptions;
+  }
+
+  setDefaultSignOptions(options: SignOptions) {
+    this._defaultSignOptions = options;
+  }
 
   #worker?: Worker;
   #clientPrivateKey?: Buffer;

@@ -1,6 +1,6 @@
 {
   "name": "@velo-dao/velo-web3auth",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "advanced and improved cosmos-kit wallet connector for Web3Auth",
   "author": "Marius Modlich <m.modlich@digitalkitchen.io>",
   "homepage": "https://github.com/velo-dao/velo-web3auth#readme",
@@ -53,10 +53,10 @@
   },
   "dependencies": {
     "@chain-registry/types": "0.18.1",
-    "@cosmjs/amino": "^0.32.2",
-    "@cosmjs/proto-signing": "^0.32.2",
+    "@cosmjs/amino": "^0.32.3",
+    "@cosmjs/proto-signing": "^0.32.3",
     "@cosmos-kit/core": "^2.8.9",
-    "@keplr-wallet/cosmos": "^0.12.70",
+    "@keplr-wallet/cosmos": "^0.12.74",
     "@toruslabs/eccrypto": "^4.0.0",
     "@web3auth/base": "^8.0.0",
     "@web3auth/base-provider": "^8.0.1",
@@ -65,7 +65,7 @@
     "cosmjs-types": "^0.9.0",
     "get-user-locale": "^2.3.1",
     "rimraf": "5.0.5",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.2",
     "url": "^0.11.3"
   }
 }

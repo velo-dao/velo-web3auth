@@ -13,6 +13,7 @@ import { Web3AuthNoModal } from '@web3auth/no-modal';
 import {
   LANGUAGE_TYPE,
   OpenloginAdapter,
+  OpenloginLoginParams,
   UX_MODE,
 } from '@web3auth/openlogin-adapter';
 import { getUserLocales } from 'get-user-locale';
@@ -112,12 +113,7 @@ export const connectClientAndProvider = async (
   isMobile: boolean,
   options: Web3AuthClientOptions,
   loginHint?: string,
-  {
-    // If no login provider already connected (cached), don't attempt to login
-    // by showing the popup auth flow. This is useful for connecting just to
-    // logout of the session, not prompting to login if already logged out.
-    dontAttemptLogin = false,
-  } = {}
+  { dontAttemptLogin = true } = {}
 ): Promise<{
   client: Web3AuthNoModal;
   provider: SafeEventEmitterProvider | null;
@@ -141,7 +137,7 @@ export const connectClientAndProvider = async (
   // Popups are blocked by default on mobile browsers, so use redirect. Popup is
   // safer for desktop browsers, so use that if not mobile.
   const uxMode =
-    options.forceType === 'redirect' || (isMobile && !options.forceType)
+    options.forceType === 'popup' || (isMobile && !options.forceType)
       ? UX_MODE.REDIRECT
       : UX_MODE.POPUP;
   // If using redirect method while trying to login, set localStorage key
@@ -167,6 +163,7 @@ export const connectClientAndProvider = async (
   const privateKeyProvider = new CommonPrivateKeyProvider({
     config: {
       chainConfig,
+      skipLookupNetwork: true,
     },
   });
 
@@ -200,7 +197,7 @@ export const connectClientAndProvider = async (
           mandatory: true,
         },
         socialBackupFactor: {
-          enable: true,
+          enable: false,
           priority: 1,
           mandatory: false,
         },
@@ -227,29 +224,6 @@ export const connectClientAndProvider = async (
   });
 
   client.configureAdapter(openloginAdapter);
-
-  // if (loginType === 'metamask') {
-  //   const metamaskAdapter = new MetamaskAdapter({
-  //     clientId: options.client.clientId,
-  //     sessionTime: 3600, // 1 hour in seconds
-  //     web3AuthNetwork: options.client.web3AuthNetwork,
-  //     chainConfig,
-  //   });
-
-  //   client.configureAdapter(metamaskAdapter);
-  // }
-
-  // if (loginType === 'coinbase') {
-  //   const coinbaseAdapter = new CoinbaseAdapter({
-  //     clientId: options.client.clientId,
-  //     sessionTime: 3600, // 1 hour in seconds
-  //     web3AuthNetwork: options.client.web3AuthNetwork,
-  //     chainConfig,
-  //   });
-
-  //   client.configureAdapter(coinbaseAdapter);
-  // }
-
   await client.init();
 
   let provider = client.connected ? client.provider : null;
@@ -259,9 +233,9 @@ export const connectClientAndProvider = async (
       provider = await client.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
         loginProvider: options.loginProvider,
         extraLoginOptions: {
-          login_hint: loginHint, // email to send the OTP to
+          login_hint: loginHint, // email to send the OTP to or phone number to send sms to
         },
-      });
+      } as OpenloginLoginParams);
     } catch (err) {
       // Unnecessary error thrown during redirect, so log and ignore it.
       if (
