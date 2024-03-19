@@ -11,6 +11,13 @@ import {
 import { ToWorkerMessage } from './types';
 import { decrypt, hashObject } from './utils';
 
+Object.defineProperty(BigInt.prototype, 'toJSON', {
+  get() {
+    'use strict';
+    return () => String(this);
+  },
+});
+
 let clientPublicKey: Buffer | undefined;
 let workerPrivateKey: Buffer | undefined;
 let walletPrivateKey: Uint8Array | undefined;

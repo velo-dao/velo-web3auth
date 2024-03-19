@@ -2,6 +2,12 @@ import { Secp256k1Wallet } from '@cosmjs/amino';
 import { DirectSecp256k1Wallet } from '@cosmjs/proto-signing';
 import { encrypt, generatePrivate, getPublic, sign, verify, } from '@toruslabs/eccrypto';
 import { decrypt, hashObject } from './utils';
+Object.defineProperty(BigInt.prototype, 'toJSON', {
+    get() {
+        'use strict';
+        return () => String(this);
+    },
+});
 let clientPublicKey;
 let workerPrivateKey;
 let walletPrivateKey;
