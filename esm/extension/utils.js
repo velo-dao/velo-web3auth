@@ -66,11 +66,7 @@ export const decrypt = async (privateKey, { iv, ephemPublicKey, ciphertext, mac 
 });
 // Used for signing and verifying objects.
 export const hashObject = (object) => Buffer.from(sha256(toUtf8(JSON.stringify(object))));
-export const connectClientAndProvider = async (isMobile, options, loginHint, { 
-// If no login provider already connected (cached), don't attempt to login
-// by showing the popup auth flow. This is useful for connecting just to
-// logout of the session, not prompting to login if already logged out.
-dontAttemptLogin = false, } = {}) => {
+export const connectClientAndProvider = async (isMobile, options, loginHint, { dontAttemptLogin = true } = {}) => {
     const chainConfig = {
         chainId: 'other',
         rpcTarget: 'other',
@@ -88,7 +84,7 @@ dontAttemptLogin = false, } = {}) => {
     });
     // Popups are blocked by default on mobile browsers, so use redirect. Popup is
     // safer for desktop browsers, so use that if not mobile.
-    const uxMode = options.forceType === 'redirect' || (isMobile && !options.forceType)
+    const uxMode = options.forceType === 'popup' || (isMobile && !options.forceType)
         ? UX_MODE.REDIRECT
         : UX_MODE.POPUP;
     // If using redirect method while trying to login, set localStorage key
@@ -106,6 +102,7 @@ dontAttemptLogin = false, } = {}) => {
     const privateKeyProvider = new CommonPrivateKeyProvider({
         config: {
             chainConfig,
+            skipLookupNetwork: true,
         },
     });
     const openloginAdapter = new OpenloginAdapter({
@@ -138,7 +135,7 @@ dontAttemptLogin = false, } = {}) => {
                     mandatory: true,
                 },
                 socialBackupFactor: {
-                    enable: true,
+                    enable: false,
                     priority: 1,
                     mandatory: false,
                 },
@@ -164,24 +161,6 @@ dontAttemptLogin = false, } = {}) => {
         },
     });
     client.configureAdapter(openloginAdapter);
-    // if (loginType === 'metamask') {
-    //   const metamaskAdapter = new MetamaskAdapter({
-    //     clientId: options.client.clientId,
-    //     sessionTime: 3600, // 1 hour in seconds
-    //     web3AuthNetwork: options.client.web3AuthNetwork,
-    //     chainConfig,
-    //   });
-    //   client.configureAdapter(metamaskAdapter);
-    // }
-    // if (loginType === 'coinbase') {
-    //   const coinbaseAdapter = new CoinbaseAdapter({
-    //     clientId: options.client.clientId,
-    //     sessionTime: 3600, // 1 hour in seconds
-    //     web3AuthNetwork: options.client.web3AuthNetwork,
-    //     chainConfig,
-    //   });
-    //   client.configureAdapter(coinbaseAdapter);
-    // }
     await client.init();
     let provider = client.connected ? client.provider : null;
     if (!client.connected) {
@@ -189,7 +168,7 @@ dontAttemptLogin = false, } = {}) => {
             provider = await client.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
                 loginProvider: options.loginProvider,
                 extraLoginOptions: {
-                    login_hint: loginHint, // email to send the OTP to
+                    login_hint: loginHint, // email to send the OTP to or phone number to send sms to
                 },
             });
         }

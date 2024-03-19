@@ -8,6 +8,17 @@ export class Web3AuthClient {
     env;
     getChain;
     loginHint;
+    _defaultSignOptions = {
+        preferNoSetFee: false,
+        preferNoSetMemo: true,
+        disableBalanceCheck: true,
+    };
+    get defaultSignOptions() {
+        return this._defaultSignOptions;
+    }
+    setDefaultSignOptions(options) {
+        this._defaultSignOptions = options;
+    }
     #worker;
     #clientPrivateKey;
     #workerPublicKey;

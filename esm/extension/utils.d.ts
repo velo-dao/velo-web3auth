@@ -8,7 +8,7 @@ export declare const listenOnce: (worker: Worker, callback: (message: FromWorker
 export declare const sendAndListenOnce: (worker: Worker, message: ToWorkerMessage, callback: (message: FromWorkerMessage) => boolean | Promise<boolean>) => Promise<void>;
 export declare const decrypt: (privateKey: Uint8Array | Buffer, { iv, ephemPublicKey, ciphertext, mac }: Ecies) => Promise<Buffer>;
 export declare const hashObject: (object: unknown) => Buffer;
-export declare const connectClientAndProvider: (isMobile: boolean, options: Web3AuthClientOptions, loginHint?: string, { dontAttemptLogin, }?: {
+export declare const connectClientAndProvider: (isMobile: boolean, options: Web3AuthClientOptions, loginHint?: string, { dontAttemptLogin }?: {
     dontAttemptLogin?: boolean | undefined;
 }) => Promise<{
     client: Web3AuthNoModal;

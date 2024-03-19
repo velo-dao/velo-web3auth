@@ -1,7 +1,7 @@
 import { Chain } from '@chain-registry/types';
 import { OfflineAminoSigner, StdSignature } from '@cosmjs/amino';
 import { OfflineDirectSigner } from '@cosmjs/proto-signing';
-import { DappEnv, WalletClient } from '@cosmos-kit/core';
+import { DappEnv, SignOptions, WalletClient } from '@cosmos-kit/core';
 import { Web3AuthSigner } from './signer';
 import { Web3AuthClientOptions } from './types';
 export declare class Web3AuthClient implements WalletClient {
@@ -9,6 +9,9 @@ export declare class Web3AuthClient implements WalletClient {
     env: DappEnv;
     getChain: (chainId: string) => Chain | undefined;
     loginHint: string | undefined;
+    private _defaultSignOptions;
+    get defaultSignOptions(): SignOptions;
+    setDefaultSignOptions(options: SignOptions): void;
     ready: boolean;
     constructor(env: DappEnv, options: Web3AuthClientOptions, getChain: (chainId: string) => Chain | undefined);
     ensureSetup(): Promise<void>;
