@@ -65,8 +65,16 @@ export const decrypt = async (privateKey, { iv, ephemPublicKey, ciphertext, mac 
     mac: Buffer.from(mac),
 });
 // Used for signing and verifying objects.
-export const hashObject = (object) => Buffer.from(sha256(toUtf8(JSON.stringify(object))));
-export const connectClientAndProvider = async (isMobile, options, loginHint, { dontAttemptLogin = true } = {}) => {
+export const hashObject = (object) => {
+    const replacer = (_, value) => {
+        if (typeof value === 'bigint') {
+            return value.toString();
+        }
+        return value;
+    };
+    return Buffer.from(sha256(toUtf8(JSON.stringify(object, replacer))));
+};
+export const connectClientAndProvider = async (isMobile, options, loginHint, { dontAttemptLogin = false } = {}) => {
     const chainConfig = {
         chainId: 'other',
         rpcTarget: 'other',
@@ -84,7 +92,7 @@ export const connectClientAndProvider = async (isMobile, options, loginHint, { d
     });
     // Popups are blocked by default on mobile browsers, so use redirect. Popup is
     // safer for desktop browsers, so use that if not mobile.
-    const uxMode = options.forceType === 'popup' || (isMobile && !options.forceType)
+    const uxMode = options.forceType === 'redirect' || (isMobile && !options.forceType)
         ? UX_MODE.REDIRECT
         : UX_MODE.POPUP;
     // If using redirect method while trying to login, set localStorage key
@@ -110,6 +118,7 @@ export const connectClientAndProvider = async (isMobile, options, loginHint, { d
         loginSettings: {
             extraLoginOptions: {
                 login_hint: loginHint, // email to send the OTP to or phone number to send sms to
+                // domain: "https://app.velo.space",
             },
             mfaLevel: 'mandatory',
         },
@@ -117,53 +126,23 @@ export const connectClientAndProvider = async (isMobile, options, loginHint, { d
             uxMode,
             whiteLabel: {
                 appName: 'Velo',
-                appUrl: 'https://velo.space',
-                useLogoLoader: false,
-                logoDark: 'https://app.velo.space/assets/logo_transparent.svg',
-                logoLight: 'https://app.velo.space/assets/logo_transparent.svg',
-                mode: 'dark',
+                // appUrl: 'https://app.velo.space',
+                useLogoLoader: true,
+                logoDark: 'https://app.velo.space/assets/logo_transparent.png',
+                logoLight: 'https://app.velo.space/assets/logo_transparent.png',
+                mode: 'auto',
                 defaultLanguage: filteredLocales[0],
                 theme: {
-                    primary: '#161616',
-                    onPrimary: '#f0f0f0',
+                    primary: '#9866DB',
+                    onPrimary: '#ffffff',
                 },
             },
-            mfaSettings: {
-                backUpShareFactor: {
-                    enable: true,
-                    priority: 0,
-                    mandatory: true,
-                },
-                socialBackupFactor: {
-                    enable: false,
-                    priority: 1,
-                    mandatory: false,
-                },
-                deviceShareFactor: {
-                    enable: false,
-                    priority: 2,
-                    mandatory: false,
-                },
-                passwordFactor: {
-                    enable: false,
-                    priority: 3,
-                    mandatory: false,
-                },
-            },
-            // Setting both to empty strings prevents the popup from opening when
-            // attempted, ensuring no login attempt is made. Essentially, this makes
-            // the `connectTo` method called on the client below throw an error if a
-            // session is not already logged in and cached.
-            ...(dontAttemptLogin && {
-                _startUrl: '',
-                _popupUrl: '',
-            }),
         },
     });
     client.configureAdapter(openloginAdapter);
     await client.init();
     let provider = client.connected ? client.provider : null;
-    if (!client.connected) {
+    if (!client.connected && !dontAttemptLogin) {
         try {
             provider = await client.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
                 loginProvider: options.loginProvider,

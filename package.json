@@ -1,6 +1,6 @@
 {
   "name": "@velo-dao/velo-web3auth",
-  "version": "1.5.6",
+  "version": "2.0.0",
   "description": "advanced and improved cosmos-kit wallet connector for Web3Auth",
   "author": "Marius Modlich <m.modlich@digitalkitchen.io>",
   "homepage": "https://github.com/velo-dao/velo-web3auth#readme",
@@ -19,16 +19,13 @@
     "!LICENSE"
   ],
   "scripts": {
-    "build:esm": "yarn tsc -p tsconfig.json --outDir esm --module es2022 || true",
+    "build:esm": "bun run tsc -p tsconfig.json --outDir esm --module es2022 || true",
     "clean:esm": "rimraf esm",
-    "clean": "npm run clean:esm",
-    "build": "npm run clean && npm run build:esm",
-    "prepare": "npm run build",
+    "clean": "bun run clean:esm",
+    "build": "bun run clean && npm run build:esm",
+    "prepare": "husky",
     "lint": "eslint --ext .tsx,.ts .",
-    "format": "eslint --ext .tsx,.ts --fix .",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
+    "release": "HUSKY=0 release-it"
   },
   "publishConfig": {
     "access": "public"
@@ -52,20 +49,93 @@
     ]
   },
   "dependencies": {
-    "@chain-registry/types": "0.18.1",
-    "@cosmjs/amino": "^0.32.3",
-    "@cosmjs/proto-signing": "^0.32.3",
-    "@cosmos-kit/core": "^2.8.9",
-    "@keplr-wallet/cosmos": "^0.12.74",
-    "@toruslabs/eccrypto": "^4.0.0",
-    "@web3auth/base": "^8.0.0",
-    "@web3auth/base-provider": "^8.0.1",
-    "@web3auth/no-modal": "^8.0.1",
-    "@web3auth/openlogin-adapter": "^8.0.1",
+    "@chain-registry/types": "0.45.50",
+    "@commitlint/cli": "^19.4.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@cosmjs/amino": "^0.32.4",
+    "@cosmjs/proto-signing": "^0.32.4",
+    "@cosmos-kit/core": "^2.13.1",
+    "@keplr-wallet/cosmos": "^0.12.121",
+    "@toruslabs/eccrypto": "^5.0.4",
+    "@toruslabs/openlogin": "^8.2.1",
+    "@typescript-eslint/eslint-plugin": "^8.1.0",
+    "@typescript-eslint/parser": "^8.1.0",
+    "@web3auth/base": "^8.12.2",
+    "@web3auth/base-provider": "^8.12.2",
+    "@web3auth/no-modal": "^8.12.3",
+    "@web3auth/openlogin-adapter": "^8.12.2",
+    "commitizen": "^4.3.0",
     "cosmjs-types": "^0.9.0",
-    "get-user-locale": "^2.3.1",
-    "rimraf": "5.0.5",
-    "typescript": "^5.4.2",
-    "url": "^0.11.3"
-  }
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^9.9.0",
+    "eslint-config-canonical": "^43.0.15",
+    "eslint-plugin-canonical": "^4.18.1",
+    "get-user-locale": "^2.3.2",
+    "husky": "^9.1.4",
+    "lint-staged": "^15.2.9",
+    "release-it": "^17.6.0",
+    "rimraf": "6.0.1",
+    "typescript": "^5.5.4",
+    "url": "^0.11.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "release-it": {
+    "github": {
+      "release": true
+    },
+    "npm": {
+      "publish": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "infile": "CHANGELOG.md",
+        "preset": {
+          "name": "conventionalcommits",
+          "types": [
+            {
+              "type": "feat",
+              "section": "Features"
+            },
+            {
+              "type": "fix",
+              "section": "Bug Fixes"
+            },
+            {
+              "type": "refactor",
+              "section": "Refactor"
+            },
+            {
+              "type": "perf",
+              "section": "Performance"
+            },
+            {
+              "type": "style",
+              "section": "Visuals"
+            },
+            {
+              "type": "docs",
+              "section": "Docs"
+            },
+            {
+              "type": "chore",
+              "section": "Chore"
+            },
+            {
+              "type": "test",
+              "section": "Tests"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "trustedDependencies": [
+    "core-js-pure",
+    "protobufjs",
+    "tiny-secp256k1"
+  ]
 }

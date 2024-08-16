@@ -230,9 +230,11 @@ export class Web3AuthClient implements WalletClient {
         { dontAttemptLogin: true }
       );
 
-      await client.logout({
-        cleanup: true,
-      });
+      if (client.connected) {
+        await client.logout({
+          cleanup: true,
+        });
+      }
     } catch (err) {
       console.warn('Web3Auth failed to logout:', err);
     }
@@ -243,6 +245,7 @@ export class Web3AuthClient implements WalletClient {
       terminate?.call(this.#worker);
       this.#worker = undefined;
     }
+    this.ready = false;
   }
 
   async getSimpleAccount(chainId: string) {

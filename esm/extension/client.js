@@ -147,9 +147,11 @@ export class Web3AuthClient {
         // around, which internally keeps a reference to the private key.
         try {
             const { client } = await connectClientAndProvider(this.env.device === 'mobile', this.#options, this.loginHint, { dontAttemptLogin: true });
-            await client.logout({
-                cleanup: true,
-            });
+            if (client.connected) {
+                await client.logout({
+                    cleanup: true,
+                });
+            }
         }
         catch (err) {
             console.warn('Web3Auth failed to logout:', err);
@@ -161,6 +163,7 @@ export class Web3AuthClient {
             terminate?.call(this.#worker);
             this.#worker = undefined;
         }
+        this.ready = false;
     }
     async getSimpleAccount(chainId) {
         const { address, username } = await this.getAccount(chainId);

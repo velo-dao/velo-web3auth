@@ -11,6 +11,7 @@ node_modules
 # npm package lock
 package-lock.json
 yarn.lock
+bun.lockb
 
 # project files
 __fixtures__

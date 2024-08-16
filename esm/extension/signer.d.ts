@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Chain } from '@chain-registry/types';
 import { AminoSignResponse, OfflineAminoSigner, StdSignDoc } from '@cosmjs/amino';
 import { AccountData, DirectSignResponse, OfflineDirectSigner } from '@cosmjs/proto-signing';
