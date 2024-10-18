@@ -25,7 +25,9 @@
 		"build": "bun run clean && npm run build:esm",
 		"prepare": "husky",
 		"lint": "eslint --ext .tsx,.ts .",
-		"release": "HUSKY=0 release-it"
+		"release:major": "HUSKY=0 release-it major",
+		"release:minor": "HUSKY=0 release-it minor",
+		"release:patch": "HUSKY=0 release-it patch"
 	},
 	"publishConfig": {
 		"access": "public"
