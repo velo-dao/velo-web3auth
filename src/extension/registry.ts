@@ -1,14 +1,13 @@
-import { Wallet } from '@cosmos-kit/core';
-
-import { ICON } from '../constant';
+import { ICON } from "../constant"
+import { type Wallet } from "@cosmos-kit/core"
 
 export const web3AuthWalletInfo: Wallet = {
-  name: 'web3auth',
-  prettyName: 'Web3Auth',
-  logo: ICON,
-  mode: 'extension',
-  mobileDisabled: false,
-  rejectMessage: {
-    source: 'Request rejected',
-  },
-};
+	logo: ICON,
+	mobileDisabled: false,
+	mode: "extension",
+	name: "web3auth",
+	prettyName: "Web3Auth",
+	rejectMessage: {
+		source: "Request rejected"
+	}
+}

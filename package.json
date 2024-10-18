@@ -1,141 +1,145 @@
 {
-  "name": "@velo-dao/velo-web3auth",
-  "version": "2.0.0",
-  "description": "advanced and improved cosmos-kit wallet connector for Web3Auth",
-  "author": "Marius Modlich <m.modlich@digitalkitchen.io>",
-  "homepage": "https://github.com/velo-dao/velo-web3auth#readme",
-  "license": "SEE LICENSE IN LICENSE",
-  "type": "module",
-  "main": "esm/index.js",
-  "module": "esm/index.js",
-  "typings": "esm/index.d.ts",
-  "directories": {
-    "lib": "src",
-    "test": "__tests__"
-  },
-  "files": [
-    "esm",
-    "!CHANGELOG.md",
-    "!LICENSE"
-  ],
-  "scripts": {
-    "build:esm": "bun run tsc -p tsconfig.json --outDir esm --module es2022 || true",
-    "clean:esm": "rimraf esm",
-    "clean": "bun run clean:esm",
-    "build": "bun run clean && npm run build:esm",
-    "prepare": "husky",
-    "lint": "eslint --ext .tsx,.ts .",
-    "release": "HUSKY=0 release-it"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/velo-dao/velo-web3auth.git"
-  },
-  "keywords": [
-    "cosmos-kit",
-    "cosmos",
-    "leap",
-    "wallet"
-  ],
-  "bugs": {
-    "url": "https://github.com/velo-dao/velo-web3auth/issues"
-  },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "dist/"
-    ]
-  },
-  "dependencies": {
-    "@chain-registry/types": "0.45.50",
-    "@commitlint/cli": "^19.4.0",
-    "@commitlint/config-conventional": "^19.2.2",
-    "@cosmjs/amino": "^0.32.4",
-    "@cosmjs/proto-signing": "^0.32.4",
-    "@cosmos-kit/core": "^2.13.1",
-    "@keplr-wallet/cosmos": "^0.12.121",
-    "@toruslabs/eccrypto": "^5.0.4",
-    "@toruslabs/openlogin": "^8.2.1",
-    "@typescript-eslint/eslint-plugin": "^8.1.0",
-    "@typescript-eslint/parser": "^8.1.0",
-    "@web3auth/base": "^8.12.2",
-    "@web3auth/base-provider": "^8.12.2",
-    "@web3auth/no-modal": "^8.12.3",
-    "@web3auth/openlogin-adapter": "^8.12.2",
-    "commitizen": "^4.3.0",
-    "cosmjs-types": "^0.9.0",
-    "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^9.9.0",
-    "eslint-config-canonical": "^43.0.15",
-    "eslint-plugin-canonical": "^4.18.1",
-    "get-user-locale": "^2.3.2",
-    "husky": "^9.1.4",
-    "lint-staged": "^15.2.9",
-    "release-it": "^17.6.0",
-    "rimraf": "6.0.1",
-    "typescript": "^5.5.4",
-    "url": "^0.11.4"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "release-it": {
-    "github": {
-      "release": true
-    },
-    "npm": {
-      "publish": true
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "infile": "CHANGELOG.md",
-        "preset": {
-          "name": "conventionalcommits",
-          "types": [
-            {
-              "type": "feat",
-              "section": "Features"
-            },
-            {
-              "type": "fix",
-              "section": "Bug Fixes"
-            },
-            {
-              "type": "refactor",
-              "section": "Refactor"
-            },
-            {
-              "type": "perf",
-              "section": "Performance"
-            },
-            {
-              "type": "style",
-              "section": "Visuals"
-            },
-            {
-              "type": "docs",
-              "section": "Docs"
-            },
-            {
-              "type": "chore",
-              "section": "Chore"
-            },
-            {
-              "type": "test",
-              "section": "Tests"
-            }
-          ]
-        }
-      }
-    }
-  },
-  "trustedDependencies": [
-    "core-js-pure",
-    "protobufjs",
-    "tiny-secp256k1"
-  ]
+	"name": "@velo-dao/velo-web3auth",
+	"version": "2.0.0",
+	"description": "advanced and improved cosmos-kit wallet connector for Web3Auth",
+	"author": "Marius Modlich <m.modlich@digitalkitchen.io>",
+	"homepage": "https://github.com/velo-dao/velo-web3auth#readme",
+	"license": "SEE LICENSE IN LICENSE",
+	"type": "module",
+	"main": "esm/index.js",
+	"module": "esm/index.js",
+	"typings": "esm/index.d.ts",
+	"directories": {
+		"lib": "src",
+		"test": "__tests__"
+	},
+	"files": [
+		"esm",
+		"!CHANGELOG.md",
+		"!LICENSE"
+	],
+	"scripts": {
+		"build:esm": "bun run tsc -p tsconfig.json --outDir esm --module es2022 || true",
+		"clean:esm": "rimraf esm",
+		"clean": "bun run clean:esm",
+		"build": "bun run clean && npm run build:esm",
+		"prepare": "husky",
+		"lint": "eslint --ext .tsx,.ts .",
+		"release": "HUSKY=0 release-it"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/velo-dao/velo-web3auth.git"
+	},
+	"keywords": [
+		"cosmos-kit",
+		"cosmos",
+		"leap",
+		"wallet"
+	],
+	"bugs": {
+		"url": "https://github.com/velo-dao/velo-web3auth/issues"
+	},
+	"jest": {
+		"testPathIgnorePatterns": [
+			"dist/"
+		]
+	},
+	"dependencies": {
+		"@chain-registry/types": "^0.50.1",
+		"@commitlint/cli": "^19.5.0",
+		"@commitlint/config-conventional": "^19.5.0",
+		"@cosmjs/amino": "^0.32.4",
+		"@cosmjs/crypto": "^0.32.4",
+		"@cosmjs/encoding": "^0.32.4",
+		"@cosmjs/proto-signing": "^0.32.4",
+		"@cosmos-kit/core": "^2.15.0",
+		"@eslint/compat": "^1.2.1",
+		"@keplr-wallet/cosmos": "^0.12.141",
+		"@toruslabs/eccrypto": "^5.0.4",
+		"@typescript-eslint/eslint-plugin": "^8.10.0",
+		"@typescript-eslint/parser": "^8.10.0",
+		"@web3auth/auth": "^9.4.1",
+		"@web3auth/auth-adapter": "^9.2.3",
+		"@web3auth/base": "^9.2.3",
+		"@web3auth/base-provider": "^9.2.3",
+		"@web3auth/no-modal": "^9.2.4",
+		"commitizen": "^4.3.1",
+		"cosmjs-types": "^0.9.0",
+		"cz-conventional-changelog": "^3.3.0",
+		"eslint": "^9.13.0",
+		"eslint-config-canonical": "^44.3.4",
+		"eslint-plugin-prettier": "^5.2.1",
+		"eslint-plugin-unused-imports": "^4.1.4",
+		"get-user-locale": "^2.3.2",
+		"husky": "^9.1.6",
+		"lint-staged": "^15.2.10",
+		"release-it": "^17.10.0",
+		"rimraf": "6.0.1",
+		"typescript": "^5.6.3",
+		"url": "^0.11.4"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	},
+	"release-it": {
+		"github": {
+			"release": true
+		},
+		"npm": {
+			"publish": true
+		},
+		"plugins": {
+			"@release-it/conventional-changelog": {
+				"infile": "CHANGELOG.md",
+				"preset": {
+					"name": "conventionalcommits",
+					"types": [
+						{
+							"type": "feat",
+							"section": "Features"
+						},
+						{
+							"type": "fix",
+							"section": "Bug Fixes"
+						},
+						{
+							"type": "refactor",
+							"section": "Refactor"
+						},
+						{
+							"type": "perf",
+							"section": "Performance"
+						},
+						{
+							"type": "style",
+							"section": "Visuals"
+						},
+						{
+							"type": "docs",
+							"section": "Docs"
+						},
+						{
+							"type": "chore",
+							"section": "Chore"
+						},
+						{
+							"type": "test",
+							"section": "Tests"
+						}
+					]
+				}
+			}
+		}
+	},
+	"trustedDependencies": [
+		"core-js-pure",
+		"protobufjs",
+		"tiny-secp256k1"
+	]
 }

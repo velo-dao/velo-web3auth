@@ -1,0 +1,25 @@
+{
+	"extends": "./tsconfig.json",
+	"include": [
+		"src/**/*",
+		"scripts/**/*",
+		"types/**/*",
+		"contracts/**/*.json",
+		".vscode/settings.json",
+		"eslint.config.mjs",
+		"package.json",
+		".commitlintrc.json",
+		".lintstagedrc.json",
+		"tsconfig.eslint.json",
+		"tsconfig.json"
+	],
+	"exclude": [
+		"main",
+		"node_modules",
+		"bun.lockb",
+		"CHANGELOG.md",
+		"README.md",
+		"LICENSE",
+		".git/"
+	]
+}

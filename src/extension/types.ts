@@ -1,147 +1,146 @@
-import { AminoSignResponse, StdSignDoc } from '@cosmjs/amino';
-import { AccountData, DirectSignResponse } from '@cosmjs/proto-signing';
-import { Wallet } from '@cosmos-kit/core';
-import { Ecies } from '@toruslabs/eccrypto';
-import { Web3AuthNoModalOptions } from '@web3auth/base';
+import { type AminoSignResponse, type StdSignDoc } from "@cosmjs/amino"
 import {
-  LOGIN_PROVIDER_TYPE,
-  OPENLOGIN_NETWORK_TYPE,
-} from '@web3auth/openlogin-adapter';
+	type AccountData,
+	type DirectSignResponse
+} from "@cosmjs/proto-signing"
+import { type Wallet } from "@cosmos-kit/core"
+import { type Ecies } from "@toruslabs/eccrypto"
+import { type LOGIN_PROVIDER_TYPE } from "@web3auth/auth-adapter"
+import {
+	type WEB3AUTH_NETWORK_TYPE,
+	type Web3AuthNoModalOptions
+} from "@web3auth/base"
+import { type SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx"
 
-import { SignDoc } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
-
-export type Web3AuthWalletInfo = Wallet & {
-  options: Web3AuthClientOptions;
-};
+export type Web3AuthWalletInfo = {
+	options: Web3AuthClientOptions
+} & Wallet
 
 export type Web3AuthLoginMethod = {
-  provider: LOGIN_PROVIDER_TYPE;
-  name: string;
-  logo: string;
-};
+	logo: string
+	name: string
+	provider: LOGIN_PROVIDER_TYPE
+}
 
 export type Web3AuthClientOptions = {
-  loginProvider: LOGIN_PROVIDER_TYPE;
+	// Web3Auth client options.
+	client: {
+		chainConfig?: Omit<Web3AuthNoModalOptions["chainConfig"], "chainNamespace">
+	} & {
+		clientId: string
+		web3AuthNetwork: WEB3AUTH_NETWORK_TYPE
+	} & Omit<Web3AuthNoModalOptions, "chainConfig">
 
-  // Web3Auth client options.
-  client: {
-    clientId: string;
-    web3AuthNetwork: OPENLOGIN_NETWORK_TYPE;
-  } & Omit<Web3AuthNoModalOptions, 'chainConfig'> & {
-      chainConfig?: Omit<
-        Web3AuthNoModalOptions['chainConfig'],
-        'chainNamespace'
-      >;
-    };
+	// Mobile devices block popups by default, so the default behavior is to use
+	// the redirect method to sign-in on mobile, and the popup method on desktop.
+	// The popup is safer, but mobile browsers tend to have less extensions (and
+	// browser extensions are the main security concern for the redirect method).
+	// Forcing popup means that the popup method will be used on mobile as well.
+	forceType?: "popup" | "redirect"
 
-  // Mobile devices block popups by default, so the default behavior is to use
-  // the redirect method to sign-in on mobile, and the popup method on desktop.
-  // The popup is safer, but mobile browsers tend to have less extensions (and
-  // browser extensions are the main security concern for the redirect method).
-  // Forcing popup means that the popup method will be used on mobile as well.
-  forceType?: 'popup' | 'redirect';
+	loginProvider: LOGIN_PROVIDER_TYPE
 
-  // Function to prompt the user to sign a transaction.
-  promptSign: PromptSign;
-};
+	// Function to prompt the user to sign a transaction.
+	promptSign: PromptSign
+}
 
 export type PromptSign = (
-  signerAddress: string,
-  data: SignData
-) => Promise<boolean>;
+	signerAddress: string,
+	data: SignData
+) => Promise<boolean>
 
 export type SignData =
-  | {
-      type: 'direct';
-      value: SignDoc;
-    }
-  | {
-      type: 'amino';
-      value: StdSignDoc;
-    };
+	| {
+			type: "amino"
+			value: StdSignDoc
+	  }
+	| {
+			type: "direct"
+			value: SignDoc
+	  }
 
 // Message the worker expects to receive.
 export type ToWorkerMessage =
-  | {
-      type: 'init_1';
-      payload: {
-        publicKey: string;
-      };
-    }
-  | {
-      type: 'init_2';
-      payload: {
-        encryptedPrivateKey: Ecies;
-      };
-    }
-  | {
-      type: 'request_accounts';
-      payload: {
-        id: number;
-        chainBech32Prefix: string;
-      };
-    }
-  | {
-      type: 'request_sign';
-      payload: {
-        id: number;
-        signerAddress: string;
-        chainBech32Prefix: string;
-        data: SignData;
-      };
-      signature: Uint8Array;
-    };
+	| {
+			payload: {
+				chainBech32Prefix: string
+				data: SignData
+				id: number
+				signerAddress: string
+			}
+			signature: Uint8Array
+			type: "request_sign"
+	  }
+	| {
+			payload: {
+				chainBech32Prefix: string
+				id: number
+			}
+			type: "request_accounts"
+	  }
+	| {
+			payload: {
+				encryptedPrivateKey: Ecies
+			}
+			type: "init_2"
+	  }
+	| {
+			payload: {
+				publicKey: string
+			}
+			type: "init_1"
+	  }
 
 // Message the worker sends to the main thread.
 export type FromWorkerMessage =
-  | {
-      type: 'ready_1';
-      payload: {
-        encryptedPublicKey: Ecies;
-      };
-    }
-  | {
-      type: 'ready_2';
-    }
-  | {
-      type: 'init_error';
-      payload: {
-        error: string;
-      };
-    }
-  | {
-      type: 'accounts';
-      payload: {
-        id: number;
-        response:
-          | {
-              type: 'success';
-              accounts: AccountData[];
-            }
-          | {
-              type: 'error';
-              error: string;
-            };
-      };
-      signature: Uint8Array;
-    }
-  | {
-      type: 'sign';
-      payload: {
-        id: number;
-        response:
-          | {
-              type: 'error';
-              value: string;
-            }
-          | {
-              type: 'direct';
-              value: DirectSignResponse;
-            }
-          | {
-              type: 'amino';
-              value: AminoSignResponse;
-            };
-      };
-      signature: Uint8Array;
-    };
+	| {
+			payload: {
+				encryptedPublicKey: Ecies
+			}
+			type: "ready_1"
+	  }
+	| {
+			payload: {
+				error: string
+			}
+			type: "init_error"
+	  }
+	| {
+			payload: {
+				id: number
+				response:
+					| {
+							accounts: AccountData[]
+							type: "success"
+					  }
+					| {
+							error: string
+							type: "error"
+					  }
+			}
+			signature: Uint8Array
+			type: "accounts"
+	  }
+	| {
+			payload: {
+				id: number
+				response:
+					| {
+							type: "amino"
+							value: AminoSignResponse
+					  }
+					| {
+							type: "direct"
+							value: DirectSignResponse
+					  }
+					| {
+							type: "error"
+							value: string
+					  }
+			}
+			signature: Uint8Array
+			type: "sign"
+	  }
+	| {
+			type: "ready_2"
+	  }

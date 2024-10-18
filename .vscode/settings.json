@@ -1,0 +1,29 @@
+{
+	"eslint.validate": [
+		"javascript",
+		"json",
+		"markdown",
+		"typescript"
+	],
+	"editor.tabSize": 3,
+	"editor.useTabStops": true,
+	"editor.detectIndentation": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+	"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+	"editor.formatOnSave": true,
+	"prettier.enable": false,
+	"[typescript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	}
+}

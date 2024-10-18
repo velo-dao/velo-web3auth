@@ -1,9 +1,9 @@
-Object.defineProperty(BigInt.prototype, 'toJSON', {
-  get() {
-    'use strict';
-    return () => String(this);
-  },
-});
+// eslint-disable-next-line no-extend-native
+Object.defineProperty(BigInt.prototype, "toJSON", {
+	get() {
+		return () => String(this)
+	}
+})
 
-export * from './extension';
-export * from './web3auth';
+export * from "./extension"
+export * from "./web3auth"
