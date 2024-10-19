@@ -25,9 +25,9 @@
     "build": "bun run clean && npm run build:esm",
     "prepare": "husky",
     "lint": "eslint --ext .tsx,.ts .",
-		"release:major": "HUSKY=0 release-it major",
-		"release:minor": "HUSKY=0 release-it minor",
-		"release:patch": "HUSKY=0 release-it patch"
+    "release:major": "HUSKY=0 release-it major",
+    "release:minor": "HUSKY=0 release-it minor",
+    "release:patch": "HUSKY=0 release-it patch"
   },
   "publishConfig": {
     "access": "public"
@@ -58,6 +58,7 @@
     "@cosmjs/proto-signing": "^0.32.4",
     "@cosmos-kit/core": "^2.15.0",
     "@keplr-wallet/cosmos": "^0.12.141",
+    "@release-it/conventional-changelog": "^9.0.0",
     "@toruslabs/eccrypto": "^5.0.4",
     "@toruslabs/openlogin": "^8.2.1",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
