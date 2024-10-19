@@ -1,6 +1,6 @@
 {
   "name": "@velo-dao/velo-web3auth",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "advanced and improved cosmos-kit wallet connector for Web3Auth",
   "author": "Marius Modlich <m.modlich@digitalkitchen.io>",
   "homepage": "https://github.com/velo-dao/velo-web3auth#readme",
