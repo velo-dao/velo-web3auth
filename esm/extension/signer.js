@@ -21,7 +21,7 @@ export class Web3AuthSigner {
             type: 'request_accounts',
             payload: {
                 id,
-                chainBech32Prefix: this.chain.bech32_prefix,
+                chainBech32Prefix: this.chain.bech32_prefix ?? "",
             },
         }, async (data) => {
             if (data.type === 'accounts' && data.payload.id === id) {
@@ -60,7 +60,7 @@ export class Web3AuthSigner {
             payload: {
                 id,
                 signerAddress,
-                chainBech32Prefix: this.chain.bech32_prefix,
+                chainBech32Prefix: this.chain.bech32_prefix ?? "",
                 data: signData,
             },
             signature: new Uint8Array(),
@@ -106,7 +106,7 @@ export class Web3AuthSigner {
             payload: {
                 id,
                 signerAddress,
-                chainBech32Prefix: this.chain.bech32_prefix,
+                chainBech32Prefix: this.chain.bech32_prefix ?? "",
                 data: signData,
             },
             signature: new Uint8Array(),
