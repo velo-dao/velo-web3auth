@@ -5,15 +5,11 @@ import { encrypt, generatePrivate, getPublic, sign, verify } from "@toruslabs/ec
 let clientPublicKey;
 let workerPrivateKey;
 let walletPrivateKey;
-// eslint-disable-next-line consistent-return
 self.onmessage = async ({ data }) => {
     if (data.type === "init_1") {
         try {
-            // Store the client's public key.
             clientPublicKey = Buffer.from(data.payload.publicKey, "hex");
-            // Generate a private key for this worker.
             workerPrivateKey = generatePrivate();
-            // Encrypt the worker's public key for the client.
             const encryptedPublicKey = await encrypt(clientPublicKey, getPublic(workerPrivateKey));
             return self.postMessage({
                 payload: {
@@ -23,7 +19,6 @@ self.onmessage = async ({ data }) => {
             });
         }
         catch (error) {
-            // eslint-disable-next-line no-console
             console.error("Web3Auth worker init_1 error", error);
             return self.postMessage({
                 payload: {
@@ -38,14 +33,12 @@ self.onmessage = async ({ data }) => {
     }
     if (data.type === "init_2") {
         try {
-            // Decrypt the private key encrypted by the client.
             walletPrivateKey = await decrypt(workerPrivateKey, data.payload.encryptedPrivateKey);
             return self.postMessage({
                 type: "ready_2"
             });
         }
         catch (error) {
-            // eslint-disable-next-line no-console
             console.error("Web3Auth worker init_2 error", error);
             return self.postMessage({
                 payload: {
@@ -71,7 +64,6 @@ self.onmessage = async ({ data }) => {
             };
         }
         catch (error) {
-            // eslint-disable-next-line no-console
             console.error("Web3Auth worker accounts error", error);
             payload = {
                 id: data.payload.id,
@@ -91,7 +83,6 @@ self.onmessage = async ({ data }) => {
     if (data.type === "request_sign") {
         let payload;
         try {
-            // Verify signature.
             await verify(clientPublicKey, hashObject(data.payload), Buffer.from(data.signature));
             if (data.payload.data.type === "direct") {
                 const response = await (await DirectSecp256k1Wallet.fromKey(walletPrivateKey, data.payload.chainBech32Prefix)).signDirect(data.payload.signerAddress, data.payload.data.value);
@@ -118,7 +109,6 @@ self.onmessage = async ({ data }) => {
             }
         }
         catch (error) {
-            // eslint-disable-next-line no-console
             console.error("Web3Auth worker sign error", error);
             payload = {
                 id: data.payload.id,

@@ -26,7 +26,9 @@ export class Web3AuthWallet extends MainWalletBase {
             }
         }
         catch (error) {
-            this.initClientError(error);
+            if (error instanceof Error) {
+                this.initClientError(error);
+            }
             return;
         }
         this.initingClient();
@@ -35,8 +37,6 @@ export class Web3AuthWallet extends MainWalletBase {
                 throw new TypeError("Undefined env.");
             }
             this.initClientDone(new Web3AuthClient(this.env, options, (chainId) => this.getChainWalletList().find((chainWallet) => chainWallet.chainId === chainId)?.chain));
-            // Force connect to this wallet if the redirect auto connect key is set
-            // and there is a wallet in the hash.
             const redirectAutoConnect = localStorage.getItem(WEB3AUTH_REDIRECT_AUTO_CONNECT_KEY);
             if (redirectAutoConnect !== options.loginProvider) {
                 return;
@@ -54,13 +54,13 @@ export class Web3AuthWallet extends MainWalletBase {
                 }
             }
             else {
-                // Don't try to connect again if no hash query params ready. This
-                // prevents auto-connect loops.
                 localStorage.removeItem(WEB3AUTH_REDIRECT_AUTO_CONNECT_KEY);
             }
         }
         catch (error) {
-            this.initClientError(error);
+            if (error instanceof Error) {
+                this.initClientError(error);
+            }
         }
     }
     get walletInfo() {

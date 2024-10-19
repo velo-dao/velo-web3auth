@@ -16,7 +16,6 @@ export class Web3AuthSigner {
     async getAccounts() {
         let accounts;
         const id = Date.now();
-        // Should not resolve until accounts are received.
         await sendAndListenOnce(this.#worker, {
             payload: {
                 chainBech32Prefix: this.chain.bech32_prefix ?? "cosmos",
@@ -25,7 +24,6 @@ export class Web3AuthSigner {
             type: "request_accounts"
         }, async (data) => {
             if (data.type === "accounts" && data.payload.id === id) {
-                // Verify signature.
                 await verify(this.#workerPublicKey, hashObject(data.payload), Buffer.from(data.signature));
                 if (data.payload.response.type === "success") {
                     accounts = data.payload.response.accounts;
@@ -53,7 +51,6 @@ export class Web3AuthSigner {
         if (!(await this.#promptSign(signerAddress, signData))) {
             throw new Error("Request rejected");
         }
-        // Create and sign signature request.
         const id = Date.now();
         const message = {
             payload: {
@@ -67,15 +64,12 @@ export class Web3AuthSigner {
         };
         message.signature = await sign(this.#clientPrivateKey, hashObject(message.payload));
         let response;
-        // Should not resolve until response is received.
         await sendAndListenOnce(this.#worker, message, async (data) => {
             if (data.type === "sign" && data.payload.id === id) {
-                // Verify signature.
                 await verify(this.#workerPublicKey, hashObject(data.payload), Buffer.from(data.signature));
                 if (data.payload.response.type === "error") {
                     throw new Error(data.payload.response.value);
                 }
-                // Type-check, should always be true.
                 if (data.payload.response.type === "amino") {
                     response = data.payload.response.value;
                 }
@@ -99,7 +93,6 @@ export class Web3AuthSigner {
         if (!(await this.#promptSign(signerAddress, signData))) {
             throw new Error("Request rejected");
         }
-        // Create and sign signature request.
         const id = Date.now();
         const message = {
             payload: {
@@ -113,15 +106,12 @@ export class Web3AuthSigner {
         };
         message.signature = await sign(this.#clientPrivateKey, hashObject(message.payload));
         let response;
-        // Should not resolve until response is received.
         await sendAndListenOnce(this.#worker, message, async (data) => {
             if (data.type === "sign" && data.payload.id === id) {
-                // Verify signature.
                 await verify(this.#workerPublicKey, hashObject(data.payload), Buffer.from(data.signature));
                 if (data.payload.response.type === "error") {
                     throw new Error(data.payload.response.value);
                 }
-                // Type-check, should always be true.
                 if (data.payload.response.type === "direct") {
                     response = data.payload.response.value;
                 }
