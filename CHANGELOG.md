@@ -1,5 +1,17 @@
 
 
+## [2.1.1](https://github.com/velo-dao/velo-web3auth/compare/2.1.0...2.1.1) (2024-10-19)
+
+
+### Features
+
+* **general:** rebuilt ([d5241d1](https://github.com/velo-dao/velo-web3auth/commit/d5241d1383599ba3a80925e7032d7f27b155f5b3))
+
+
+### Bug Fixes
+
+* **general:** fixed build pipeline ([959b2b3](https://github.com/velo-dao/velo-web3auth/commit/959b2b3c2ae14a3b5bcd5a16d89c0e88a5dd65f1))
+
 ## 2.1.0 (2024-10-18)
 
 
