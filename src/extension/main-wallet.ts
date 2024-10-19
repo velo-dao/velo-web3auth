@@ -35,7 +35,10 @@ export class Web3AuthWallet extends MainWalletBase {
 				throw new TypeError("Invalid promptSign function")
 			}
 		} catch (error) {
-			this.initClientError(error)
+			if (error instanceof Error) {
+				this.initClientError(error)
+			}
+
 			return
 		}
 
@@ -57,8 +60,6 @@ export class Web3AuthWallet extends MainWalletBase {
 				)
 			)
 
-			// Force connect to this wallet if the redirect auto connect key is set
-			// and there is a wallet in the hash.
 			const redirectAutoConnect = localStorage.getItem(
 				WEB3AUTH_REDIRECT_AUTO_CONNECT_KEY
 			)
@@ -79,12 +80,12 @@ export class Web3AuthWallet extends MainWalletBase {
 					this.logger?.error(error)
 				}
 			} else {
-				// Don't try to connect again if no hash query params ready. This
-				// prevents auto-connect loops.
 				localStorage.removeItem(WEB3AUTH_REDIRECT_AUTO_CONNECT_KEY)
 			}
 		} catch (error) {
-			this.initClientError(error)
+			if (error instanceof Error) {
+				this.initClientError(error)
+			}
 		}
 	}
 
