@@ -58,7 +58,7 @@
     "@cosmjs/proto-signing": "^0.32.4",
     "@cosmos-kit/core": "^2.15.0",
     "@keplr-wallet/cosmos": "^0.12.141",
-    "@release-it/conventional-changelog": "^9.0.0",
+    "@release-it/conventional-changelog": "^8.0.2",
     "@toruslabs/eccrypto": "^5.0.4",
     "@toruslabs/openlogin": "^8.2.1",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
