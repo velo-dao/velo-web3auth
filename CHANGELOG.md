@@ -1,5 +1,10 @@
 
 
+## 2.2.0 (2024-12-05)
+
+* fix(general): no manual version change ([cadad68](https://github.com/velo-dao/velo-web3auth/commit/cadad68))
+* feat(general): added cjs build and added correct entrypoints ([bc5f0f7](https://github.com/velo-dao/velo-web3auth/commit/bc5f0f7))
+
 ## 2.1.2 (2024-10-19)
 
 
