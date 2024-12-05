@@ -1,11 +1,11 @@
-import { sign, verify } from '@toruslabs/eccrypto';
-import { hashObject, sendAndListenOnce } from './utils';
+import { hashObject, sendAndListenOnce } from "./utils";
+import { sign, verify } from "@toruslabs/eccrypto";
 export class Web3AuthSigner {
     chain;
-    #worker;
     #clientPrivateKey;
-    #workerPublicKey;
     #promptSign;
+    #worker;
+    #workerPublicKey;
     constructor(chain, worker, clientPrivateKey, workerPublicKey, promptSign) {
         this.chain = chain;
         this.#worker = worker;
@@ -18,16 +18,16 @@ export class Web3AuthSigner {
         const id = Date.now();
         // Should not resolve until accounts are received.
         await sendAndListenOnce(this.#worker, {
-            type: 'request_accounts',
             payload: {
-                id,
                 chainBech32Prefix: this.chain.bech32_prefix ?? "",
+                id
             },
+            type: "request_accounts"
         }, async (data) => {
-            if (data.type === 'accounts' && data.payload.id === id) {
+            if (data.type === "accounts" && data.payload.id === id) {
                 // Verify signature.
                 await verify(this.#workerPublicKey, hashObject(data.payload), Buffer.from(data.signature));
-                if (data.payload.response.type === 'success') {
+                if (data.payload.response.type === "success") {
                     accounts = data.payload.response.accounts;
                     return true;
                 }
@@ -38,45 +38,45 @@ export class Web3AuthSigner {
             return false;
         });
         if (!accounts) {
-            throw new Error('Failed to get accounts');
+            throw new Error("Failed to get accounts");
         }
         return accounts;
     }
-    async signDirect(signerAddress, signDoc) {
-        if (signDoc.chainId !== this.chain.chain_id) {
-            throw new Error('Chain ID mismatch');
+    async signAmino(signerAddress, signDocument) {
+        if (signDocument.chain_id !== this.chain.chain_id) {
+            throw new Error("Chain ID mismatch");
         }
         const signData = {
-            type: 'direct',
-            value: signDoc,
+            type: "amino",
+            value: signDocument
         };
         if (!(await this.#promptSign(signerAddress, signData))) {
-            throw new Error('Request rejected');
+            throw new Error("Request rejected");
         }
         // Create and sign signature request.
         const id = Date.now();
         const message = {
-            type: 'request_sign',
             payload: {
-                id,
-                signerAddress,
                 chainBech32Prefix: this.chain.bech32_prefix ?? "",
                 data: signData,
+                id,
+                signerAddress
             },
             signature: new Uint8Array(),
+            type: "request_sign"
         };
         message.signature = await sign(this.#clientPrivateKey, hashObject(message.payload));
         let response;
         // Should not resolve until response is received.
         await sendAndListenOnce(this.#worker, message, async (data) => {
-            if (data.type === 'sign' && data.payload.id === id) {
+            if (data.type === "sign" && data.payload.id === id) {
                 // Verify signature.
                 await verify(this.#workerPublicKey, hashObject(data.payload), Buffer.from(data.signature));
-                if (data.payload.response.type === 'error') {
+                if (data.payload.response.type === "error") {
                     throw new Error(data.payload.response.value);
                 }
                 // Type-check, should always be true.
-                if (data.payload.response.type === 'direct') {
+                if (data.payload.response.type === "amino") {
                     response = data.payload.response.value;
                 }
                 return true;
@@ -84,45 +84,45 @@ export class Web3AuthSigner {
             return false;
         });
         if (!response) {
-            throw new Error('Failed to get response');
+            throw new Error("Failed to get response");
         }
         return response;
     }
-    async signAmino(signerAddress, signDoc) {
-        if (signDoc.chain_id !== this.chain.chain_id) {
-            throw new Error('Chain ID mismatch');
+    async signDirect(signerAddress, signDocument) {
+        if (signDocument.chainId !== this.chain.chain_id) {
+            throw new Error("Chain ID mismatch");
         }
         const signData = {
-            type: 'amino',
-            value: signDoc,
+            type: "direct",
+            value: signDocument
         };
         if (!(await this.#promptSign(signerAddress, signData))) {
-            throw new Error('Request rejected');
+            throw new Error("Request rejected");
         }
         // Create and sign signature request.
         const id = Date.now();
         const message = {
-            type: 'request_sign',
             payload: {
-                id,
-                signerAddress,
                 chainBech32Prefix: this.chain.bech32_prefix ?? "",
                 data: signData,
+                id,
+                signerAddress
             },
             signature: new Uint8Array(),
+            type: "request_sign"
         };
         message.signature = await sign(this.#clientPrivateKey, hashObject(message.payload));
         let response;
         // Should not resolve until response is received.
         await sendAndListenOnce(this.#worker, message, async (data) => {
-            if (data.type === 'sign' && data.payload.id === id) {
+            if (data.type === "sign" && data.payload.id === id) {
                 // Verify signature.
                 await verify(this.#workerPublicKey, hashObject(data.payload), Buffer.from(data.signature));
-                if (data.payload.response.type === 'error') {
+                if (data.payload.response.type === "error") {
                     throw new Error(data.payload.response.value);
                 }
                 // Type-check, should always be true.
-                if (data.payload.response.type === 'amino') {
+                if (data.payload.response.type === "direct") {
                     response = data.payload.response.value;
                 }
                 return true;
@@ -130,7 +130,7 @@ export class Web3AuthSigner {
             return false;
         });
         if (!response) {
-            throw new Error('Failed to get response');
+            throw new Error("Failed to get response");
         }
         return response;
     }

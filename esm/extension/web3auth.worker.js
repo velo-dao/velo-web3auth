@@ -1,134 +1,139 @@
-import { Secp256k1Wallet } from '@cosmjs/amino';
-import { DirectSecp256k1Wallet } from '@cosmjs/proto-signing';
-import { encrypt, generatePrivate, getPublic, sign, verify, } from '@toruslabs/eccrypto';
-import { decrypt, hashObject } from './utils';
+import { decrypt, hashObject } from "./utils.js";
+import { Secp256k1Wallet } from "@cosmjs/amino";
+import { DirectSecp256k1Wallet } from "@cosmjs/proto-signing";
+import { encrypt, generatePrivate, getPublic, sign, verify } from "@toruslabs/eccrypto";
 let clientPublicKey;
 let workerPrivateKey;
 let walletPrivateKey;
+// eslint-disable-next-line consistent-return
 self.onmessage = async ({ data }) => {
-    if (data.type === 'init_1') {
+    if (data.type === "init_1") {
         try {
             // Store the client's public key.
-            clientPublicKey = Buffer.from(data.payload.publicKey, 'hex');
+            clientPublicKey = Buffer.from(data.payload.publicKey, "hex");
             // Generate a private key for this worker.
             workerPrivateKey = generatePrivate();
             // Encrypt the worker's public key for the client.
             const encryptedPublicKey = await encrypt(clientPublicKey, getPublic(workerPrivateKey));
             return self.postMessage({
-                type: 'ready_1',
                 payload: {
-                    encryptedPublicKey,
+                    encryptedPublicKey
                 },
-            });
+                type: "ready_1"
+            }, "*");
         }
-        catch (err) {
-            console.error('Web3Auth worker init_1 error', err);
+        catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Web3Auth worker init_1 error", error);
             return self.postMessage({
-                type: 'init_error',
                 payload: {
-                    error: err instanceof Error ? err.message : `${err}`,
+                    error: error instanceof Error ? error.message : `${error}`
                 },
-            });
+                type: "init_error"
+            }, "*");
         }
     }
     if (!clientPublicKey || !workerPrivateKey) {
-        throw new Error('Web3Auth worker not initialized');
+        throw new Error("Web3Auth worker not initialized");
     }
-    if (data.type === 'init_2') {
+    if (data.type === "init_2") {
         try {
             // Decrypt the private key encrypted by the client.
             walletPrivateKey = await decrypt(workerPrivateKey, data.payload.encryptedPrivateKey);
             return self.postMessage({
-                type: 'ready_2',
-            });
+                type: "ready_2"
+            }, "*");
         }
-        catch (err) {
-            console.error('Web3Auth worker init_2 error', err);
+        catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Web3Auth worker init_2 error", error);
             return self.postMessage({
-                type: 'init_error',
                 payload: {
-                    error: err instanceof Error ? err.message : `${err}`,
+                    error: error instanceof Error ? error.message : `${error}`
                 },
-            });
+                type: "init_error"
+            }, "*");
         }
     }
     if (!walletPrivateKey) {
-        throw new Error('Web3Auth client not initialized');
+        throw new Error("Web3Auth client not initialized");
     }
-    if (data.type === 'request_accounts') {
+    if (data.type === "request_accounts") {
         let payload;
         try {
             const accounts = await (await DirectSecp256k1Wallet.fromKey(walletPrivateKey, data.payload.chainBech32Prefix)).getAccounts();
             payload = {
                 id: data.payload.id,
                 response: {
-                    type: 'success',
                     accounts,
-                },
+                    type: "success"
+                }
             };
         }
-        catch (err) {
-            console.error('Web3Auth worker accounts error', err);
+        catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Web3Auth worker accounts error", error);
             payload = {
                 id: data.payload.id,
                 response: {
-                    type: 'error',
-                    error: err instanceof Error ? err.message : `${err}`,
-                },
+                    error: error instanceof Error ? error.message : `${error}`,
+                    type: "error"
+                }
             };
         }
         const signature = await sign(workerPrivateKey, hashObject(payload));
         return self.postMessage({
-            type: 'accounts',
             payload,
             signature,
-        });
+            type: "accounts"
+        }, "*");
     }
-    if (data.type === 'request_sign') {
+    if (data.type === "request_sign") {
         let payload;
         try {
             // Verify signature.
             await verify(clientPublicKey, hashObject(data.payload), Buffer.from(data.signature));
-            if (data.payload.data.type === 'direct') {
+            if (data.payload.data.type === "direct") {
                 const response = await (await DirectSecp256k1Wallet.fromKey(walletPrivateKey, data.payload.chainBech32Prefix)).signDirect(data.payload.signerAddress, data.payload.data.value);
                 payload = {
                     id: data.payload.id,
                     response: {
-                        type: 'direct',
-                        value: response,
-                    },
+                        type: "direct",
+                        value: response
+                    }
                 };
             }
-            else if (data.payload.data.type === 'amino') {
+            else if (data.payload.data.type === "amino") {
                 const response = await (await Secp256k1Wallet.fromKey(walletPrivateKey, data.payload.chainBech32Prefix)).signAmino(data.payload.signerAddress, data.payload.data.value);
                 payload = {
                     id: data.payload.id,
                     response: {
-                        type: 'amino',
-                        value: response,
-                    },
+                        type: "amino",
+                        value: response
+                    }
                 };
             }
             else {
-                throw new Error('Invalid sign data type');
+                throw new Error("Invalid sign data type");
             }
         }
-        catch (err) {
-            console.error('Web3Auth worker sign error', err);
+        catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Web3Auth worker sign error", error);
             payload = {
                 id: data.payload.id,
                 response: {
-                    type: 'error',
-                    value: err instanceof Error ? err.message : `${err}`,
-                },
+                    type: "error",
+                    value: error instanceof Error ? error.message : `${error}`
+                }
             };
         }
         const signature = await sign(workerPrivateKey, hashObject(payload));
         return self.postMessage({
-            type: 'sign',
             payload,
             signature,
-        });
+            type: "sign"
+        }, "*");
     }
 };
 //# sourceMappingURL=web3auth.worker.js.map

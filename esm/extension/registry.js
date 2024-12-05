@@ -1,12 +1,12 @@
-import { ICON } from '../constant';
+import { ICON } from "../constant";
 export const web3AuthWalletInfo = {
-    name: 'web3auth',
-    prettyName: 'Web3Auth',
     logo: ICON,
-    mode: 'extension',
     mobileDisabled: false,
+    mode: "extension",
+    name: "web3auth",
+    prettyName: "Web3Auth",
     rejectMessage: {
-        source: 'Request rejected',
-    },
+        source: "Request rejected"
+    }
 };
 //# sourceMappingURL=registry.js.map

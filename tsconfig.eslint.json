@@ -1,0 +1,16 @@
+{
+	"extends": "./tsconfig.json",
+	"include": [
+		"src/**/*",
+	],
+	"exclude": [
+		"cjs/",
+		"esm/",
+		"node_modules/",
+		"bun.lockb",
+		"CHANGELOG.md",
+		"README.md",
+		".git/",
+		".husky/",
+	]
+}

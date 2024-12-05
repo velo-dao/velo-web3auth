@@ -1,28 +1,37 @@
 {
   "name": "@velo-dao/velo-web3auth",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "advanced and improved cosmos-kit wallet connector for Web3Auth",
   "author": "Marius Modlich <m.modlich@digitalkitchen.io>",
   "homepage": "https://github.com/velo-dao/velo-web3auth#readme",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
-  "main": "esm/index.js",
+  "main": "cjs/index.js",
   "module": "esm/index.js",
-  "typings": "esm/index.d.ts",
+  "typings": "types/index.d.ts",
   "directories": {
-    "lib": "src",
-    "test": "__tests__"
+    "lib": "src"
   },
   "files": [
     "esm",
+    "cjs",
+    "types",
     "!CHANGELOG.md",
     "!LICENSE"
   ],
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
+    }
+  },
   "scripts": {
-    "build:esm": "bun run tsc -p tsconfig.json --outDir esm --module es2022 || true",
-    "clean:esm": "rimraf esm",
-    "clean": "bun run clean:esm",
-    "build": "bun run clean && npm run build:esm",
+    "build:esm": "bunx --bun tsc -p tsconfig.esm.json",
+    "build:cjs": "bunx --bun tsc -p tsconfig.cjs.json",
+    "clean:esm": "bunx --bun rimraf esm",
+    "clean:cjs": "bunx --bun rimraf cjs",
+    "clean": "bun run clean:esm && bun run clean:cjs",
+    "build": "bun run clean && bun run build:esm && bun run build:cjs",
     "prepare": "husky",
     "lint": "eslint --ext .tsx,.ts .",
     "release:major": "HUSKY=0 release-it major",
@@ -39,46 +48,44 @@
   "keywords": [
     "cosmos-kit",
     "cosmos",
-    "leap",
+    "web3auth",
     "wallet"
   ],
   "bugs": {
     "url": "https://github.com/velo-dao/velo-web3auth/issues"
   },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "dist/"
-    ]
-  },
   "dependencies": {
-    "@chain-registry/types": "0.50.1",
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "@cosmjs/amino": "^0.32.4",
-    "@cosmjs/proto-signing": "^0.32.4",
-    "@cosmos-kit/core": "^2.15.0",
-    "@keplr-wallet/cosmos": "^0.12.141",
-    "@release-it/conventional-changelog": "^8.0.2",
-    "@toruslabs/eccrypto": "^5.0.4",
-    "@toruslabs/openlogin": "^8.2.1",
-    "@typescript-eslint/eslint-plugin": "^8.10.0",
-    "@typescript-eslint/parser": "^8.10.0",
-    "@web3auth/base": "^8.12.4",
-    "@web3auth/base-provider": "^8.12.4",
-    "@web3auth/no-modal": "^8.12.4",
-    "@web3auth/openlogin-adapter": "^8.12.4",
-    "commitizen": "^4.3.1",
-    "cosmjs-types": "^0.9.0",
-    "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^9.13.0",
-    "eslint-config-canonical": "^44.3.4",
-    "get-user-locale": "^2.3.2",
-    "husky": "^9.1.6",
-    "lint-staged": "^15.2.10",
-    "release-it": "^17.10.0",
+    "@chain-registry/types": "0.50.28",
+    "@commitlint/cli": "19.6.0",
+    "@commitlint/config-conventional": "19.6.0",
+    "@cosmjs/amino": "0.32.4",
+    "@cosmjs/crypto": "^0.32.4",
+    "@cosmjs/encoding": "^0.32.4",
+    "@cosmjs/proto-signing": "0.32.4",
+    "@cosmos-kit/core": "2.15.0",
+    "@keplr-wallet/cosmos": "0.12.159",
+    "@release-it/conventional-changelog": "9.0.3",
+    "@toruslabs/eccrypto": "5.0.4",
+    "@toruslabs/openlogin": "8.2.1",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "8.17.0",
+    "@web3auth/base": "8.12.4",
+    "@web3auth/base-provider": "8.12.4",
+    "@web3auth/no-modal": "8.12.4",
+    "@web3auth/openlogin-adapter": "8.12.4",
+    "commitizen": "4.3.1",
+    "cosmjs-types": "0.9.0",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint": "9.16.0",
+    "eslint-config-canonical": "44.3.33",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "get-user-locale": "2.3.2",
+    "husky": "9.1.7",
+    "lint-staged": "15.2.10",
+    "release-it": "17.10.0",
     "rimraf": "6.0.1",
-    "typescript": "^5.6.3",
-    "url": "^0.11.4"
+    "typescript": "5.7.2"
   },
   "config": {
     "commitizen": {

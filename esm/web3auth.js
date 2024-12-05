@@ -1,4 +1,4 @@
-import { Web3AuthWallet, web3AuthWalletInfo } from './extension';
+import { Web3AuthWallet, web3AuthWalletInfo } from './extension/index.js';
 export const makeWeb3AuthWallets = (options) => {
     return options.loginMethods.map(({ provider, name, logo }) => {
         return new Web3AuthWallet({
