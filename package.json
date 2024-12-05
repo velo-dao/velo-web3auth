@@ -6,9 +6,9 @@
   "homepage": "https://github.com/velo-dao/velo-web3auth#readme",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
-  "main": "cjs/index.js",
-  "module": "esm/index.js",
-  "types": "types/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/types/src/index.d.ts",
   "directories": {
     "lib": "src"
   },
@@ -21,8 +21,8 @@
   ],
   "exports": {
     ".": {
-      "import": "./esm/index.js",
-      "require": "./cjs/index.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     }
   },
   "scripts": {
