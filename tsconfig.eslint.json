@@ -2,10 +2,10 @@
 	"extends": "./tsconfig.json",
 	"include": [
 		"src/**/*",
+		"rollup.config.ts"
 	],
 	"exclude": [
-		"cjs/",
-		"esm/",
+		"dist/",
 		"node_modules/",
 		"bun.lockb",
 		"CHANGELOG.md",

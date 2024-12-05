@@ -1,11 +1,11 @@
 {
    "extends": "./tsconfig.json",
    "compilerOptions": {
-      "module": "commonjs",
-      "outDir": "cjs",
-      "declarationDir": "types",
+      "outDir": "dist/cjs",
+      "module": "CommonJS",
       "moduleResolution": "node",
+      "declarationDir": "dist/cjs/types",
       "declaration": true,
-      "target": "ES2015"
+      "declarationMap": true
    }
 }
