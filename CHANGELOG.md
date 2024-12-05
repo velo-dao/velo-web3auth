@@ -1,5 +1,9 @@
 
 
+## 2.3.0 (2024-12-05)
+
+* feat(build): added rollup building ([142e00d](https://github.com/velo-dao/velo-web3auth/commit/142e00d))
+
 ## 2.2.0 (2024-12-05)
 
 * fix(general): no manual version change ([cadad68](https://github.com/velo-dao/velo-web3auth/commit/cadad68))
