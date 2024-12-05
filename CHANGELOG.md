@@ -1,5 +1,9 @@
 
 
+## <small>2.3.1 (2024-12-05)</small>
+
+* fix(build): fixed entrypoints ([f03af80](https://github.com/velo-dao/velo-web3auth/commit/f03af80))
+
 ## 2.3.0 (2024-12-05)
 
 * feat(build): added rollup building ([142e00d](https://github.com/velo-dao/velo-web3auth/commit/142e00d))
