@@ -1,3 +1,4 @@
+import pack from "./package.json" assert { type: "json" }
 import commonjs from "@rollup/plugin-commonjs"
 import json from "@rollup/plugin-json"
 import resolve from "@rollup/plugin-node-resolve"
@@ -22,6 +23,7 @@ const cjsTypescript = typescript({
 
 const config = defineConfig([
 	{
+		external: Object.keys(pack.dependencies || {}),
 		input: "src/index.ts",
 		onwarn(warning, warn) {
 			// Ignore circular dependency warnings from node_modules
@@ -65,6 +67,7 @@ const config = defineConfig([
 		].filter(Boolean)
 	},
 	{
+		external: Object.keys(pack.dependencies || {}),
 		input: "src/index.ts",
 		onwarn(warning, warn) {
 			// Ignore circular dependency warnings from node_modules
