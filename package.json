@@ -6,29 +6,34 @@
   "homepage": "https://github.com/velo-dao/velo-web3auth#readme",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/types/src/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "directories": {
     "lib": "src"
   },
   "files": [
-    "esm",
-    "cjs",
-    "types",
+    "dist",
     "!CHANGELOG.md",
     "!LICENSE"
   ],
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     }
   },
   "scripts": {
-    "build:rollup": "rollup -c --configPlugin typescript",
-    "clean": "rimraf dist",
-    "build": "npm run clean && npm run build:rollup",
+    "build:types": "bun tsc -p tsconfig.declarations.json",
+    "build:rollup": "bun rollup -c --configPlugin typescript",
+    "clean": "bun rimraf dist",
+    "build": "bun run clean && bun run build:types && bun run build:rollup",
     "prepare": "husky",
     "lint": "eslint --ext .tsx,.ts .",
     "release:major": "HUSKY=0 release-it major",

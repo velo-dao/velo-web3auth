@@ -89,7 +89,7 @@ export type ToWorkerMessage =
 				id: number
 				signerAddress: string
 			}
-			signature: Uint8Array
+			signature: Buffer
 			type: "request_sign"
 	  }
 	| {

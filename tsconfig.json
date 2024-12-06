@@ -1,7 +1,7 @@
 {
    "compilerOptions": {
       "baseUrl": ".",
-      "rootDir": ".",
+      "rootDir": "src",
       "strictNullChecks": true,
       "module": "ESNext",
       "skipLibCheck": true,
@@ -11,21 +11,21 @@
          "ESNext",
          "DOM"
       ],
-      "sourceMap": true,
+      "sourceMap": false,
       "isolatedModules": true,
       "allowJs": true,
       "forceConsistentCasingInFileNames": true,
-      "moduleResolution": "bundler",
+      "moduleResolution": "node",
       "resolveJsonModule": true,
       "declaration": false,
       "declarationMap": false
    },
    "include": [
       "src/**/*",
-      "rollup.config.ts"
+      "../rollup.config.ts"
    ],
    "exclude": [
-      "node_modules",
-      "dist"
+      "node_modules/**/*",
+      "dist/**/*"
    ]
 }

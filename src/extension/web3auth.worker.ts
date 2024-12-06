@@ -12,7 +12,7 @@ import {
 
 let clientPublicKey: Buffer | undefined
 let workerPrivateKey: Buffer | undefined
-let walletPrivateKey: Uint8Array | undefined
+let walletPrivateKey: Buffer | undefined
 
 // eslint-disable-next-line consistent-return
 self.onmessage = async ({ data }: MessageEvent<ToWorkerMessage>) => {
@@ -96,7 +96,7 @@ self.onmessage = async ({ data }: MessageEvent<ToWorkerMessage>) => {
 		try {
 			const accounts = await (
 				await DirectSecp256k1Wallet.fromKey(
-					walletPrivateKey,
+					new Uint8Array(walletPrivateKey.buffer),
 					data.payload.chainBech32Prefix
 				)
 			).getAccounts()
@@ -135,16 +135,12 @@ self.onmessage = async ({ data }: MessageEvent<ToWorkerMessage>) => {
 		let payload
 		try {
 			// Verify signature.
-			await verify(
-				clientPublicKey,
-				hashObject(data.payload),
-				Buffer.from(data.signature)
-			)
+			await verify(clientPublicKey, hashObject(data.payload), data.signature)
 
 			if (data.payload.data.type === "direct") {
 				const response = await (
 					await DirectSecp256k1Wallet.fromKey(
-						walletPrivateKey,
+						new Uint8Array(walletPrivateKey.buffer),
 						data.payload.chainBech32Prefix
 					)
 				).signDirect(data.payload.signerAddress, data.payload.data.value)
@@ -159,7 +155,7 @@ self.onmessage = async ({ data }: MessageEvent<ToWorkerMessage>) => {
 			} else if (data.payload.data.type === "amino") {
 				const response = await (
 					await Secp256k1Wallet.fromKey(
-						walletPrivateKey,
+						new Uint8Array(walletPrivateKey.buffer),
 						data.payload.chainBech32Prefix
 					)
 				).signAmino(data.payload.signerAddress, data.payload.data.value)

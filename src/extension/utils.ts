@@ -91,19 +91,9 @@ export const sendAndListenOnce = (
 	})
 
 export const decrypt = async (
-	privateKey: Buffer | Uint8Array,
-	{ ciphertext, ephemPublicKey, iv, mac }: Ecies
-): Promise<Buffer> =>
-	await ecdecrypt(
-		Buffer.from(privateKey),
-		// Convert Uint8Array to Buffer.
-		{
-			ciphertext: Buffer.from(ciphertext),
-			ephemPublicKey: Buffer.from(ephemPublicKey),
-			iv: Buffer.from(iv),
-			mac: Buffer.from(mac)
-		}
-	)
+	privateKey: Buffer,
+	ecies: Ecies
+): Promise<Buffer> => await ecdecrypt(privateKey, ecies)
 
 // Used for signing and verifying objects.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

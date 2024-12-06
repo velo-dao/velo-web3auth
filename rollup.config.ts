@@ -8,27 +8,36 @@ import { defineConfig } from "rollup"
 const isProduction = process.env.NODE_ENV === "production"
 
 const esmTypescript = typescript({
-	declarationDir: "dist/esm/types",
-	inlineSources: !isProduction,
 	module: "esnext",
-	outDir: "dist/esm",
-	sourceMap: true,
-	tsconfig: "./tsconfig.esm.json"
+	sourceMap: false,
+	tsconfig: "./tsconfig.json"
 })
 
 const cjsTypescript = typescript({
-	declaration: true,
-	declarationDir: "dist/cjs/types",
-	inlineSources: !isProduction,
+	declaration: false,
 	module: "esnext",
-	outDir: "dist/cjs",
-	sourceMap: true,
+	sourceMap: false,
 	tsconfig: "./tsconfig.cjs.json"
 })
 
 const config = defineConfig([
 	{
 		input: "src/index.ts",
+		onwarn(warning, warn) {
+			// Ignore circular dependency warnings from node_modules
+			if (
+				warning.code === "CIRCULAR_DEPENDENCY" &&
+				warning.message.includes("node_modules")
+			) {
+				return
+			}
+
+			if (warning.code === "EVAL" && warning.message.includes("node_modules")) {
+				return
+			}
+
+			warn(warning)
+		},
 		output: {
 			dir: "dist/esm",
 			exports: "named",
@@ -42,11 +51,12 @@ const config = defineConfig([
 			},
 			preserveModules: true,
 			preserveModulesRoot: "src",
-			sourcemap: true
+			sourcemap: false
 		},
 		plugins: [
 			resolve({
-				extensions: [".js", ".ts", ".json"]
+				extensions: [".js", ".ts", ".json"],
+				preferBuiltins: true
 			}),
 			commonjs(),
 			esmTypescript,
@@ -56,16 +66,32 @@ const config = defineConfig([
 	},
 	{
 		input: "src/index.ts",
+		onwarn(warning, warn) {
+			// Ignore circular dependency warnings from node_modules
+			if (
+				warning.code === "CIRCULAR_DEPENDENCY" &&
+				warning.message.includes("node_modules")
+			) {
+				return
+			}
+
+			if (warning.code === "EVAL" && warning.message.includes("node_modules")) {
+				return
+			}
+
+			warn(warning)
+		},
 		output: {
 			dir: "dist/cjs",
 			exports: "named",
 			format: "cjs",
 			preserveModules: false,
-			sourcemap: true
+			sourcemap: false
 		},
 		plugins: [
 			resolve({
-				extensions: [".js", ".ts", ".json"]
+				extensions: [".js", ".ts", ".json"],
+				preferBuiltins: true
 			}),
 			commonjs(),
 			cjsTypescript,

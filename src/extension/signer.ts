@@ -105,7 +105,7 @@ export class Web3AuthSigner implements OfflineAminoSigner, OfflineDirectSigner {
 				id,
 				signerAddress
 			},
-			signature: new Uint8Array(),
+			signature: Buffer.from(""),
 			type: "request_sign"
 		}
 		message.signature = await sign(
@@ -171,7 +171,7 @@ export class Web3AuthSigner implements OfflineAminoSigner, OfflineDirectSigner {
 				id,
 				signerAddress
 			},
-			signature: new Uint8Array(),
+			signature: Buffer.from(""),
 			type: "request_sign"
 		}
 		message.signature = await sign(
