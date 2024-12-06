@@ -1,5 +1,9 @@
 
 
+## <small>2.3.3 (2024-12-06)</small>
+
+* fix(build): externalised node modules ([ad61aab](https://github.com/velo-dao/velo-web3auth/commit/ad61aab))
+
 ## <small>2.3.2 (2024-12-06)</small>
 
 * fix(build): improved rollup build ([851c47d](https://github.com/velo-dao/velo-web3auth/commit/851c47d))
